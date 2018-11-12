@@ -1,0 +1,14 @@
+INPUT(
+./debug\main.o
+./debug\mainwindow.o
+./debug\buttons.o
+./debug\rook.o
+./debug\bishop.o
+./debug\piece.o
+./debug\knight.o
+./debug\king.o
+./debug\queen.o
+./debug\pawn.o
+./debug\moc_mainwindow.o
+./debug\moc_buttons.o
+);

@@ -5,8 +5,8 @@
 #include<QSignalMapper>
 #include <QVector>
 #include <QSet>
-#include <QList>
 #include <QMediaPlayer>
+#include <QList>
 
 #include "buttons.h"
 #include "QWidget"
@@ -27,24 +27,23 @@ class MainWindow : public QMainWindow
     int id_first;
     QString turn;
 
-    QPushButton * undo;
+
+    QPushButton *undo;
     int undo_num;
 
-    QMediaPlayer * player ;
-
+    QMediaPlayer * player;
 
     QSet <int> myset;
     QSet <int> myset2;
-    QSet <int> mysetCopy;
-    QSet <int> myset2Copy;
-    QSet <int> mysetKing;
+    QSet <int> danger;
 
-    QList <int> first_place_id_list;
-    QList <int> second_place_id_list;
-    QList <int> first_place_idpiece_list;
-    QList <int> second_place_idpiece_list;
-    QList <QIcon> first_place_icon_list;
-    QList <QIcon> second_place_icon_list;
+    QList<int> first_place_id_list;
+    QList<int> second_place_id_list;
+    QList<int> first_place_idpiece_list;
+    QList<int> second_place_idpiece_list;
+    QList<QIcon> first_place_icon_list;
+    QList<QIcon> second_place_icon_list;
+
 
     QVector <int> vtr;
 
@@ -130,9 +129,9 @@ class MainWindow : public QMainWindow
     void fillset(int id);
     void colorize();
     void uncolorize();
+    void soundes();
     bool movement_is_aviable(int id);
-    bool kingIsInDanger(QString s);
-    void filter_set(int id);
+    bool king_in_danger(int id_first  ,int id);
 
 
 public slots:

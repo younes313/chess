@@ -18,14 +18,14 @@ MainWindow::MainWindow(QWidget *parent)
     undo = new QPushButton(widget);
     undo->resize(40,40);
     undo->move(20,50);
-    undo->setText("undo");
-    connect(undo , SIGNAL(clicked(bool)),this,SLOT(undo_clicked()));
+    undo->setText("Undo");
+    connect(undo , SIGNAL(clicked(bool)) , this , SLOT(undo_clicked()));
     undo_num=0;
-
-    player = new QMediaPlayer(this);
 
     dd =0;
     turn = "white";
+
+    player=new QMediaPlayer(this);
 
 
     //newing buttons
@@ -76,14 +76,14 @@ MainWindow::MainWindow(QWidget *parent)
     set_places();
     set_signalMapper();
 
-    //    for(int i=0 ; i<8 ; i++)
-    //    {
-    //        for(int j=0 ;j<8;j++)
-    //        {
-    //            cout<<btn[i][j].id_piece<<" ";
-    //        }
-    //        cout<<endl;
-    //    }
+    for(int i=0 ; i<8 ; i++)
+    {
+        for(int j=0 ;j<8;j++)
+        {
+            cout<<btn[i][j].id_piece<<" ";
+        }
+        cout<<endl;
+    }
     //    set_connetions();
 
     //    connect(btn[6][0].pushbutton , SIGNAL(clicked(bool)) , this , SLOT(button_clicked()));
@@ -217,23 +217,23 @@ void MainWindow::set_places()
 
 void MainWindow::pixmap()
 {
-    rook_white   = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\rook1.png");
-    rook_black   = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\rook.png");
+    rook_white   = new QPixmap("D:\\piecesssss\\rook1.png");
+    rook_black   = new QPixmap("D:\\piecesssss\\rook.png");
 
-    knight_white = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\horse1.png");
-    knight_black = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\horse.png");
+    knight_white = new QPixmap("D:\\piecesssss\\horse1.png");
+    knight_black = new QPixmap("D:\\piecesssss\\horse.png");
 
-    bishop_white = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\bishop1.png");
-    bishop_black = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\bishop.png");
+    bishop_white = new QPixmap("D:\\piecesssss\\bishop1.png");
+    bishop_black = new QPixmap("D:\\piecesssss\\bishop.png");
 
-    queen_white  = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\queen1.png");
-    queen_black  = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\queen.png");
+    queen_white  = new QPixmap("D:\\piecesssss\\queen1.png");
+    queen_black  = new QPixmap("D:\\piecesssss\\queen.png");
 
-    king_white   = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\king1.png");
-    king_black   = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\king.png");
+    king_white   = new QPixmap("D:\\piecesssss\\king1.png");
+    king_black   = new QPixmap("D:\\piecesssss\\king.png");
 
-    pawn_white   = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\pawn1.png");
-    pawn_black   = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\pawn.png");
+    pawn_white   = new QPixmap("D:\\piecesssss\\pawn1.png");
+    pawn_black   = new QPixmap("D:\\piecesssss\\pawn.png");
 
     rook_white1   = new QIcon(*rook_white);
     rook_black1   = new QIcon(*rook_black);
@@ -275,28 +275,33 @@ void MainWindow::button_clicked(int id)
                 ||
                 ((turn =="black") && (btn[id/10][id%10].id_piece < 17)&&(btn[id/10][id%10].id_piece >0)))
         {
-
+//            if()
+            id_first = id;
+            dd=1;
             myset.clear();
             myset2.clear();
             fillset(id);
-            mysetCopy = myset ;
-            myset2Copy = myset2;
-            //            filter_set(id);
-            myset = mysetCopy;
-            myset2 = myset2Copy;
             colorize();
-
-            id_first = id;
-            dd=1;
 
 
         }
     }
     else
     {
+
+//        if( king_in_danger(id_first , id) == 0)
+//        {
+//            dd=0;
+//            return;
+//        }
+
         if( movement_is_aviable(id) && (id!=id_first) )
         {
 
+            QIcon temp ;
+
+            //playing sounds
+            soundes();
 
             //filling undo lists
             {
@@ -310,21 +315,18 @@ void MainWindow::button_clicked(int id)
             }
 
 
-
-            QIcon temp ;
-            //            if(id_first >=10)
             temp = btn[id_first/10][id_first%10 ].pushbutton->icon();
             btn[(id_first)/10][id_first%10 ].pushbutton->setIcon(QIcon());
             btn[(id)/10][id%10 ].pushbutton->setIcon(temp);
             btn[(id)/10][id%10 ].pushbutton->setIconSize(QSize(100,100));
 
 
+
+
             btn[(id)/10][id%10 ].id_piece = btn[(id_first)/10][id_first%10 ].id_piece ;
             btn[(id_first)/10][id_first%10 ].id_piece = 0;
 
             uncolorize();
-
-
 
             dd=0;
             if(turn=="white")
@@ -337,42 +339,7 @@ void MainWindow::button_clicked(int id)
 
 }
 
-void MainWindow::undo_clicked()
-{
 
-    if(!dd && undo_num!=0)
-    {
-        QIcon temp1 , temp2;
-        QList<QIcon>::iterator icon_itr = first_place_icon_list.begin();
-        QList<int>::iterator int_itr = first_place_id_list.begin();
-        QList<int>::iterator id_itr = first_place_idpiece_list.begin();
-        temp1 = (*icon_itr);
-        btn[(*int_itr)/10][(*int_itr)%10].pushbutton->setIcon(temp1);
-        btn[(*int_itr)/10][(*int_itr)%10].id_piece = (*id_itr);
-
-        icon_itr = second_place_icon_list.begin();
-        int_itr = second_place_id_list.begin();
-        id_itr = second_place_idpiece_list.begin();
-        temp2 = (*icon_itr);
-        btn[(*int_itr)/10][(*int_itr)%10].pushbutton->setIcon(temp2);
-        btn[(*int_itr)/10][(*int_itr)%10].id_piece = (*id_itr);
-
-        first_place_icon_list.pop_front();
-        first_place_idpiece_list.pop_front();
-        first_place_id_list.pop_front();
-        second_place_icon_list.pop_front();
-        second_place_idpiece_list.pop_front();
-        second_place_id_list.pop_front();
-
-        if(turn=="white")
-            turn="black";
-        else
-            turn="white";
-
-        undo_num--;
-
-    }
-}
 
 void MainWindow::fillset(int id)
 {
@@ -1224,7 +1191,6 @@ void MainWindow::fillset(int id)
 
     }
 }
-
 void MainWindow::colorize()
 {
 
@@ -1305,6 +1271,48 @@ void MainWindow::uncolorize()
     }
 }
 
+void MainWindow::soundes()
+{
+
+    if(btn[id_first/10][id_first%10].id_piece == 2 || btn[id_first/10][id_first%10].id_piece == 7 || btn[id_first/10][id_first%10].id_piece == 63 ||btn[id_first/10][id_first%10].id_piece == 58)
+    {
+        player->setMedia(QUrl::fromLocalFile("D:\\sounds\\knight.mp3"));
+        player->setVolume(70);
+        player->play();
+    }
+
+    if(btn[id_first/10][id_first%10].id_piece == 3 || btn[id_first/10][id_first%10].id_piece == 6 || btn[id_first/10][id_first%10].id_piece == 62 || btn[id_first/10][id_first%10].id_piece == 59)
+    {
+        player->setMedia(QUrl::fromLocalFile("D:\\sounds\\bishop.mp3"));
+        player->setVolume(70);
+        player->play();
+    }
+    if(btn[id_first/10][id_first%10].id_piece == 4 || btn[id_first/10][id_first%10].id_piece == 60)
+    {
+        player->setMedia(QUrl::fromLocalFile("D:\\sounds\\queen.mp3"));
+        player->setVolume(70);
+        player->play();
+    }
+    if(btn[id_first/10][id_first%10].id_piece == 5 || btn[id_first/10][id_first%10].id_piece == 61)
+    {
+        player->setMedia(QUrl::fromLocalFile("D:\\sounds\\king.mp3"));
+        player->setVolume(70);
+        player->play();
+    }
+    if(btn[id_first/10][id_first%10].id_piece == 1 || btn[id_first/10][id_first%10].id_piece == 8 || btn[id_first/10][id_first%10].id_piece == 64 || btn[id_first/10][id_first%10].id_piece == 57)
+    {
+        player->setMedia(QUrl::fromLocalFile("D:\\sounds\\rook.mp3"));
+        player->setVolume(80);
+        player->play();
+    }
+    if((btn[id_first/10][id_first%10].id_piece>8 && btn[id_first/10][id_first%10].id_piece<17) || (btn[id_first/10][id_first%10].id_piece>48 && btn[id_first/10][id_first%10].id_piece<57))
+    {
+        player->setMedia(QUrl::fromLocalFile("D:\\sounds\\pawn.mp3"));
+        player->setVolume(80);
+        player->play();
+    }
+}
+
 bool MainWindow::movement_is_aviable(int id)
 {
     for(QSet<int> ::iterator itr = myset.begin() ; itr != myset.end() ; itr++)
@@ -1319,81 +1327,129 @@ bool MainWindow::movement_is_aviable(int id)
         if( (*itr)==id )
             return true;
     }
-    //    dd=0;
+
+    dd=0;
     return false;
 }
 
-bool MainWindow::kingIsInDanger(QString s)
+
+
+bool MainWindow::king_in_danger(int id_first,int id)
 {
-    int king1;
-    if(s=="white")
+    int rowcpy = id_first/10;
+    int colcpy = id_first%10;
+
+    int destinationid = btn[id/10][id%10].id_piece;
+
+    int idpiece_cpy=btn[rowcpy][colcpy].id_piece;
+
+    btn[rowcpy][colcpy].id_piece = 0;
+
+    btn[id/10][id%10].id_piece =  idpiece_cpy;
+
+    if(turn == "white")
+        turn="black";
+    else
+        turn = "white";
+
+    for(int i=0;i<8;i++)
     {
-        for(int i =0 ; i<8 ; i++)
+        for(int j=0;j<8;j++)
         {
-            for(int j=0 ; j<8 ; j++)
-            {
-                if(btn[i][j].id_piece < 17 && btn[i][j].id_piece >0)
-                {
-                    fillset(i*10 + j);
-                    for(QSet<int>::iterator itr = myset2.begin() ; itr!= myset2.end() ; itr++)
-                        mysetKing.insert((*itr));
-                }
-                if(btn[i][j].id_piece == 61 )
-                    king1 = i*10 + j;
 
-            }
+            myset2.clear();
+             myset.clear();
+            fillset(i*10 + j);
+
+
+
+
+   // danger = myset2 ;
+
+
+    int alaki = myset2.size();
+
+
+
+
+    for(QSet<int>::iterator itr = myset2.begin() ; itr != myset2.end() ;itr++ )
+    {
+
+        int piece_id = btn[(*itr)/10][(*itr)%10].id_piece ;
+
+        if(btn[(*itr)/10][(*itr)%10].id_piece == 61 || btn[(*itr)/10][(*itr)%10].id_piece==5 )
+        {
+            uncolorize();
+            btn[rowcpy][colcpy].id_piece=idpiece_cpy;
+
+             btn[id/10][id%10].id_piece = destinationid;
+             if(turn == "white")
+                 turn="black";
+             else
+                 turn = "white";
+
+            return false;
         }
-        if(mysetKing.find(king1) != mysetKing.end())
-            return true;
-
-        return false;
     }
+ }
+
+
+
+    danger .clear();
+
+   }
+
+    uncolorize();
+
+    myset2.clear();
+
+    btn[rowcpy][colcpy].id_piece=idpiece_cpy;
+
+     btn[id/10][id%10].id_piece = 0;
+     if(turn == "white")
+         turn="black";
+     else
+         turn = "white";
+
+    return true;
+
+
 }
 
-void MainWindow::filter_set(int id)
+void MainWindow::undo_clicked()
 {
-    for(QSet<int>::iterator itr = mysetCopy.begin() ; itr != mysetCopy.end() ; itr++)
+
+
+    if(!dd && undo_num!=0)
     {
+        QIcon temp1 , temp2;
+        QList<QIcon>::iterator icon_itr = first_place_icon_list.begin();
+        QList<int>::iterator int_itr = first_place_id_list.begin();
+        QList<int>::iterator id_itr = first_place_idpiece_list.begin();
+        temp1 = (*icon_itr);
+        btn[(*int_itr)/10][(*int_itr)%10].pushbutton->setIcon(temp1);
+        btn[(*int_itr)/10][(*int_itr)%10].id_piece = (*id_itr);
 
-        int row1 = id/10;
-        int col1 = id%10;
-        int row2 = (*itr)/10;
-        int col2 = (*itr)%10;
+        icon_itr = second_place_icon_list.begin();
+        int_itr = second_place_id_list.begin();
+        id_itr = second_place_idpiece_list.begin();
+        temp2 = (*icon_itr);
+        btn[(*int_itr)/10][(*int_itr)%10].pushbutton->setIcon(temp2);
+        btn[(*int_itr)/10][(*int_itr)%10].id_piece = (*id_itr);
 
-        int temp = btn[row2][col2].id_piece;
-        btn[row2][col2].id_piece = id;
-        btn[row1][col1].id_piece=0;
+        first_place_icon_list.pop_front();
+        first_place_idpiece_list.pop_front();
+        first_place_id_list.pop_front();
+        second_place_icon_list.pop_front();
+        second_place_idpiece_list.pop_front();
+        second_place_id_list.pop_front();
 
-        if(kingIsInDanger(turn))
-        {
+        if(turn=="white")
+            turn="black";
+        else
+            turn="white";
 
-            mysetCopy.remove((*itr));
-        }
-
-        btn[row1][col1].id_piece = id;
-        btn[row2][col2].id_piece = temp;
-
-    }
-
-    for(QSet<int>::iterator itr = myset2Copy.begin() ; itr != myset2Copy.end() ; itr++)
-    {
-
-        int row1 = id/10;
-        int col1 = id%10;
-        int row2 = (*itr)/10;
-        int col2 = (*itr)%10;
-
-        int temp = btn[row2][col2].id_piece;
-        btn[row2][col2].id_piece = id;
-        btn[row1][col1].id_piece=0;
-
-        if(kingIsInDanger(turn))
-        {
-            myset2Copy.remove((*itr));
-        }
-
-        btn[row1][col1].id_piece = id;
-        btn[row2][col2].id_piece = temp;
+        undo_num--;
 
     }
 }
