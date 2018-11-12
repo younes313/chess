@@ -1,0 +1,14 @@
+INPUT(
+./release\main.o
+./release\mainwindow.o
+./release\bishop.o
+./release\buttons.o
+./release\king.o
+./release\knight.o
+./release\pawn.o
+./release\piece.o
+./release\queen.o
+./release\rook.o
+./release\moc_mainwindow.o
+./release\moc_buttons.o
+);
