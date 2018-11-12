@@ -3,10 +3,8 @@
 #include <iostream>
 #include <windows.h>
 
-using namespace std;
 
-//last step pawn
-//if movement is not avaible dont go to the second part
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -15,18 +13,8 @@ MainWindow::MainWindow(QWidget *parent)
     QWidget * widget = new QWidget;
     widget->resize(1000,900);
 
-    undo = new QPushButton(widget);
-    undo->resize(40,40);
-    undo->move(20,50);
-    undo->setText("undo");
-    connect(undo , SIGNAL(clicked(bool)),this,SLOT(undo_clicked()));
-    undo_num=0;
-
-    player = new QMediaPlayer(this);
-
     dd =0;
     turn = "white";
-
 
     //newing buttons
     btn = new buttons * [8];
@@ -75,16 +63,7 @@ MainWindow::MainWindow(QWidget *parent)
     pixmap();
     set_places();
     set_signalMapper();
-
-    //    for(int i=0 ; i<8 ; i++)
-    //    {
-    //        for(int j=0 ;j<8;j++)
-    //        {
-    //            cout<<btn[i][j].id_piece<<" ";
-    //        }
-    //        cout<<endl;
-    //    }
-    //    set_connetions();
+    set_connetions();
 
     //    connect(btn[6][0].pushbutton , SIGNAL(clicked(bool)) , this , SLOT(button_clicked()));
 
@@ -98,12 +77,6 @@ MainWindow::MainWindow(QWidget *parent)
     //    btn[2][2].pushbutton->setIcon(ButtonIcon);
     //    btn[2][2].pushbutton->setIconSize(QSize(100,100));
     //    btn[2][2].pushbutton->setIcon(QIcon());
-
-    //    btn[0][1].pushbutton->setStyleSheet(" background-color: white;"
-    //                                        "border-style: outset;"
-    //                                        "border-width: 10px;"
-    //                                        "border-color: red;");
-    //    btn[0][0].pushbutton->setStyleSheet("background-color: white");
 
     this->setCentralWidget(widget);
 }
@@ -146,7 +119,7 @@ void MainWindow::set_pieces()
     queen_B = new queen ("black" , 4 , 0 , 3);
 
     rook_W1 = new rook ("white" , 57 , 7 , 0);
-    rook_W2 = new rook ("white" , 64 , 7 , 7); //changed 7,7
+    rook_W2 = new rook ("white" , 64 , 7 , 7);
     rook_B1 = new rook ("black" , 1 , 0 , 0);
     rook_B2 = new rook ("black" , 8 , 0 , 7);
 
@@ -217,8 +190,8 @@ void MainWindow::set_places()
 
 void MainWindow::pixmap()
 {
-    rook_white   = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\rook1.png");
-    rook_black   = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\rook.png");
+    rook_white = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\rook1.png");
+    rook_black = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\rook.png");
 
     knight_white = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\horse1.png");
     knight_black = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\horse.png");
@@ -226,14 +199,14 @@ void MainWindow::pixmap()
     bishop_white = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\bishop1.png");
     bishop_black = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\bishop.png");
 
-    queen_white  = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\queen1.png");
-    queen_black  = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\queen.png");
+    queen_white = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\queen1.png");
+    queen_black = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\queen.png");
 
-    king_white   = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\king1.png");
-    king_black   = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\king.png");
+    king_white = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\king1.png");
+    king_black = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\king.png");
 
-    pawn_white   = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\pawn1.png");
-    pawn_black   = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\pawn.png");
+    pawn_white = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\pawn1.png");
+    pawn_black = new QPixmap("C:\\Users\\yunes\\Desktop\\piecesssss\\pawn.png");
 
     rook_white1   = new QIcon(*rook_white);
     rook_black1   = new QIcon(*rook_black);
@@ -249,7 +222,18 @@ void MainWindow::pixmap()
     pawn_black1   = new QIcon(*pawn_black);
 }
 
-
+void MainWindow::set_connetions()
+{
+    //    for(int i=0 ; i<8 ; i++)
+    //    {
+    //        for(int j=0 ;j<8;j++)
+    //        {
+    //
+    //    int a=49;
+    //            connect(btn[6][0].pushbutton , SIGNAL(clicked(bool)) , this , SLOT(button_clicked(int)));
+    //        }
+    //    }
+}
 
 void MainWindow::set_signalMapper()
 {
@@ -266,51 +250,23 @@ void MainWindow::set_signalMapper()
 }
 
 
-
 void MainWindow::button_clicked(int id)
 {
     if(!dd)
     {
         if( ((turn=="white")&&(btn[id/10][id%10].id_piece > 48))   /*player can choose  button :  it's his turn & king is not in danger */
                 ||
-                ((turn =="black") && (btn[id/10][id%10].id_piece < 17)&&(btn[id/10][id%10].id_piece >0)))
+                ((turn =="black")&& (btn[id/10][id%10].id_piece < 17)&&(btn[id/10][id%10].id_piece >0)))
         {
-
-            myset.clear();
-            myset2.clear();
-            fillset(id);
-            mysetCopy = myset ;
-            myset2Copy = myset2;
-            //            filter_set(id);
-            myset = mysetCopy;
-            myset2 = myset2Copy;
-            colorize();
-
             id_first = id;
             dd=1;
-
 
         }
     }
     else
     {
-        if( movement_is_aviable(id) && (id!=id_first) )
+        if(1 /*movement is avaible */ )
         {
-
-
-            //filling undo lists
-            {
-                first_place_icon_list.push_front(btn[id_first/10][id_first%10].pushbutton->icon());
-                second_place_icon_list.push_front(btn[id/10][id%10].pushbutton->icon());
-                first_place_id_list.push_front(id_first);
-                second_place_id_list.push_front(id);
-                first_place_idpiece_list.push_front(btn[id_first/10][id_first%10].id_piece);
-                second_place_idpiece_list.push_front(btn[id/10][id%10].id_piece);
-                undo_num++;
-            }
-
-
-
             QIcon temp ;
             //            if(id_first >=10)
             temp = btn[id_first/10][id_first%10 ].pushbutton->icon();
@@ -318,1085 +274,20 @@ void MainWindow::button_clicked(int id)
             btn[(id)/10][id%10 ].pushbutton->setIcon(temp);
             btn[(id)/10][id%10 ].pushbutton->setIconSize(QSize(100,100));
 
-
+            int tmp;
+            vtr[]
             btn[(id)/10][id%10 ].id_piece = btn[(id_first)/10][id_first%10 ].id_piece ;
-            btn[(id_first)/10][id_first%10 ].id_piece = 0;
-
-            uncolorize();
-
 
 
             dd=0;
             if(turn=="white")
                 turn = "black";
             else turn = "white";
-
-
         }
     }
 
 }
 
-void MainWindow::undo_clicked()
-{
-
-    if(!dd && undo_num!=0)
-    {
-        QIcon temp1 , temp2;
-        QList<QIcon>::iterator icon_itr = first_place_icon_list.begin();
-        QList<int>::iterator int_itr = first_place_id_list.begin();
-        QList<int>::iterator id_itr = first_place_idpiece_list.begin();
-        temp1 = (*icon_itr);
-        btn[(*int_itr)/10][(*int_itr)%10].pushbutton->setIcon(temp1);
-        btn[(*int_itr)/10][(*int_itr)%10].id_piece = (*id_itr);
-
-        icon_itr = second_place_icon_list.begin();
-        int_itr = second_place_id_list.begin();
-        id_itr = second_place_idpiece_list.begin();
-        temp2 = (*icon_itr);
-        btn[(*int_itr)/10][(*int_itr)%10].pushbutton->setIcon(temp2);
-        btn[(*int_itr)/10][(*int_itr)%10].id_piece = (*id_itr);
-
-        first_place_icon_list.pop_front();
-        first_place_idpiece_list.pop_front();
-        first_place_id_list.pop_front();
-        second_place_icon_list.pop_front();
-        second_place_idpiece_list.pop_front();
-        second_place_id_list.pop_front();
-
-        if(turn=="white")
-            turn="black";
-        else
-            turn="white";
-
-        undo_num--;
-
-    }
-}
-
-void MainWindow::fillset(int id)
-{
-    int row1 =  id/10;
-    int col1 =  id%10;
-    myset.clear();
-    myset2.clear();
-
-    //rook
-    if(btn[row1][col1].id_piece == 1 || btn[row1][col1].id_piece == 8 || btn[row1][col1].id_piece == 57 || btn[row1][col1].id_piece == 64)
-    {
-        if(turn == "white")
-        {
-            for(int i=row1+1 ; i<8 ; i++)
-            {
-                if((btn[i][col1].id_piece <17) && (btn[i][col1].id_piece>0))
-                {
-                    myset2.insert(i*10 + col1);
-                    break;
-                }
-                else if(btn[i][col1].id_piece >48)
-                    break;
-
-                myset.insert(i*10 + col1);
-
-            }
-
-            for(int i=row1-1 ; i>=0 ; i--)
-            {
-                if(btn[i][col1].id_piece <17 && btn[i][col1].id_piece>0)
-                {
-                    myset2.insert(i*10 + col1);
-                    break;
-                }
-                else if(btn[i][col1].id_piece >48)
-                    break;
-
-                myset.insert(i*10 + col1);
-
-            }
-
-
-            for(int i=col1+1 ; i<8 ; i++)
-            {
-                if(btn[row1][i].id_piece <17 && btn[row1][i].id_piece>0)
-                {
-                    myset2.insert(row1*10 + i);
-                    break;
-                }
-                else if(btn[row1][i].id_piece >48)
-                    break;
-
-                myset.insert(row1*10 + i);
-
-            }
-
-
-            for(int i=col1-1 ; i>=0 ; i--)
-            {
-                if(btn[row1][i].id_piece <17 && btn[row1][i].id_piece>0)
-                {
-                    myset2.insert(row1*10 + i);
-                    break;
-                }
-                else if(btn[row1][i].id_piece >48)
-                    break;
-
-                myset.insert(row1*10 + i);
-
-            }
-
-
-
-        }
-
-        else if(turn == "black")
-        {
-            for(int i=row1+1 ; i<8 ; i++)
-            {
-                if((btn[i][col1].id_piece <17) && (btn[i][col1].id_piece>0))
-                    break;
-
-                else if(btn[i][col1].id_piece >48)
-                {
-                    myset2.insert(i*10 + col1);
-                    break;
-                }
-
-                myset.insert(i*10 + col1);
-
-            }
-
-            for(int i=row1-1 ; i>=0 ; i--)
-            {
-                if(btn[i][col1].id_piece >48)
-                {
-                    myset2.insert(i*10 + col1);
-                    break;
-                }
-                else if( btn[i][col1].id_piece <17 && btn[i][col1].id_piece>0)
-                    break;
-
-                myset.insert(i*10 + col1);
-
-            }
-
-
-            for(int i=col1+1 ; i<8 ; i++)
-            {
-                if(btn[row1][i].id_piece >48)
-                {
-                    myset2.insert(row1*10 + i);
-                    break;
-                }
-                else if(btn[row1][i].id_piece <17 && btn[row1][i].id_piece>0)
-                    break;
-
-                myset.insert(row1*10 + i);
-
-            }
-
-
-            for(int i=col1-1 ; i>=0 ; i--)
-            {
-                if(btn[row1][i].id_piece >48)
-                {
-                    myset2.insert(row1*10 + i);
-                    break;
-                }
-                else if(btn[row1][i].id_piece <17 && btn[row1][i].id_piece>0)
-                    break;
-
-                myset.insert(row1*10 + i);
-
-            }
-
-
-
-        }
-    }
-    //bishop
-    else if(btn[row1][col1].id_piece == 3 || btn[row1][col1].id_piece == 6 || btn[row1][col1].id_piece == 59 || btn[row1][col1].id_piece == 62)
-    {
-        if(turn=="white")
-        {
-            for(int i=1 ; i+row1<8 && i+col1<8 ; i++)
-            {
-                if((btn[row1+i][col1+i].id_piece <17) && (btn[row1+i][col1+i].id_piece>0))
-                {
-                    myset2.insert((row1+i)*10 + col1+i);
-                    break;
-                }
-                else if(btn[row1+i][col1+i].id_piece >48)
-                    break;
-
-                myset.insert((row1+i)*10 + col1+i);
-            }
-
-            for(int i=1 ; i+row1<8 && col1-i>=0 ; i++)
-            {
-                if((btn[row1+i][col1-i].id_piece <17) && (btn[row1+i][col1-i].id_piece>0))
-                {
-                    myset2.insert((row1+i)*10 + col1-i);
-                    break;
-                }
-                else if(btn[row1+i][col1-i].id_piece >48)
-                    break;
-
-                myset.insert((row1+i)*10 + col1-i);
-            }
-
-            for(int i=1 ; row1-i>=0 && col1-i>=0 ; i++)
-            {
-                if((btn[row1-i][col1-i].id_piece <17) && (btn[row1-i][col1-i].id_piece>0))
-                {
-                    myset2.insert((row1-i)*10 + col1-i);
-                    break;
-                }
-                else if(btn[row1-i][col1-i].id_piece >48)
-                    break;
-
-                myset.insert((row1-i)*10 + col1-i);
-            }
-
-            for(int i=1 ; row1-i>=0 && i+col1<8 ; i++)
-            {
-                if((btn[row1-i][col1+i].id_piece <17) && (btn[row1-i][col1+i].id_piece>0))
-                {
-                    myset2.insert((row1-i)*10 + col1+i);
-                    break;
-                }
-                else if(btn[row1-i][col1+i].id_piece >48)
-                    break;
-
-                myset.insert((row1-i)*10 + col1+i);
-            }
-
-        }
-        else if(turn=="black")
-        {
-            for(int i=1 ; i+row1<8 && i+col1<8 ; i++)
-            {
-                if(btn[row1+i][col1+i].id_piece >48)
-                {
-                    myset2.insert((row1+i)*10 + col1+i);
-                    break;
-                }
-                else if((btn[row1+i][col1+i].id_piece <17) && (btn[row1+i][col1+i].id_piece>0))
-                    break;
-
-                myset.insert((row1+i)*10 + col1+i);
-            }
-
-            for(int i=1 ; i+row1<8 && col1-i>=0 ; i++)
-            {
-                if(btn[row1+i][col1-i].id_piece >48)
-                {
-                    myset2.insert((row1+i)*10 + col1-i);
-                    break;
-                }
-                else if((btn[row1+i][col1-i].id_piece <17) && (btn[row1+i][col1-i].id_piece>0))
-                    break;
-
-                myset.insert((row1+i)*10 + col1-i);
-            }
-
-            for(int i=1 ; row1-i>=0 && col1-i>=0 ; i++)
-            {
-                if(btn[row1-i][col1-i].id_piece >48)
-                {
-                    myset2.insert((row1-i)*10 + col1-i);
-                    break;
-                }
-                else if((btn[row1-i][col1-i].id_piece <17) && (btn[row1-i][col1-i].id_piece>0))
-                    break;
-
-                myset.insert((row1-i)*10 + col1-i);
-            }
-
-            for(int i=1 ; row1-i>=0 && i+col1<8 ; i++)
-            {
-                if(btn[row1-i][col1+i].id_piece >48)
-                {
-                    myset2.insert((row1-i)*10 + col1+i);
-                    break;
-                }
-                else if((btn[row1-i][col1+i].id_piece <17) && (btn[row1-i][col1+i].id_piece>0))
-                    break;
-
-                myset.insert((row1-i)*10 + col1+i);
-            }
-
-        }
-
-    }
-    //queen
-    else if(btn[row1][col1].id_piece == 4 || btn[row1][col1].id_piece == 60)
-    {
-        if(turn=="white")
-        {
-            for(int i=row1+1 ; i<8 ; i++)
-            {
-                if((btn[i][col1].id_piece <17) && (btn[i][col1].id_piece>0))
-                {
-                    myset2.insert(i*10 + col1);
-                    break;
-                }
-                else if(btn[i][col1].id_piece >48)
-                    break;
-
-                myset.insert(i*10 + col1);
-
-            }
-
-            for(int i=row1-1 ; i>=0 ; i--)
-            {
-                if(btn[i][col1].id_piece <17 && btn[i][col1].id_piece>0)
-                {
-                    myset2.insert(i*10 + col1);
-                    break;
-                }
-                else if(btn[i][col1].id_piece >48)
-                    break;
-
-                myset.insert(i*10 + col1);
-
-            }
-
-
-            for(int i=col1+1 ; i<8 ; i++)
-            {
-                if(btn[row1][i].id_piece <17 && btn[row1][i].id_piece>0)
-                {
-                    myset2.insert(row1*10 + i);
-                    break;
-                }
-                else if(btn[row1][i].id_piece >48)
-                    break;
-
-                myset.insert(row1*10 + i);
-
-            }
-
-
-            for(int i=col1-1 ; i>=0 ; i--)
-            {
-                if(btn[row1][i].id_piece <17 && btn[row1][i].id_piece>0)
-                {
-                    myset2.insert(row1*10 + i);
-                    break;
-                }
-                else if(btn[row1][i].id_piece >48)
-                    break;
-
-                myset.insert(row1*10 + i);
-
-            }
-
-
-            for(int i=1 ; i+row1<8 && i+col1<8 ; i++)
-            {
-                if((btn[row1+i][col1+i].id_piece <17) && (btn[row1+i][col1+i].id_piece>0))
-                {
-                    myset2.insert((row1+i)*10 + col1+i);
-                    break;
-                }
-                else if(btn[row1+i][col1+i].id_piece >48)
-                    break;
-
-                myset.insert((row1+i)*10 + col1+i);
-            }
-
-            for(int i=1 ; i+row1<8 && col1-i>=0 ; i++)
-            {
-                if((btn[row1+i][col1-i].id_piece <17) && (btn[row1+i][col1-i].id_piece>0))
-                {
-                    myset2.insert((row1+i)*10 + col1-i);
-                    break;
-                }
-                else if(btn[row1+i][col1-i].id_piece >48)
-                    break;
-
-                myset.insert((row1+i)*10 + col1-i);
-            }
-
-            for(int i=1 ; row1-i>=0 && col1-i>=0 ; i++)
-            {
-                if((btn[row1-i][col1-i].id_piece <17) && (btn[row1-i][col1-i].id_piece>0))
-                {
-                    myset2.insert((row1-i)*10 + col1-i);
-                    break;
-                }
-                else if(btn[row1-i][col1-i].id_piece >48)
-                    break;
-
-                myset.insert((row1-i)*10 + col1-i);
-            }
-
-            for(int i=1 ; row1-i>=0 && i+col1<8 ; i++)
-            {
-                if((btn[row1-i][col1+i].id_piece <17) && (btn[row1-i][col1+i].id_piece>0))
-                {
-                    myset2.insert((row1-i)*10 + col1+i);
-                    break;
-                }
-                else if(btn[row1-i][col1+i].id_piece >48)
-                    break;
-
-                myset.insert((row1-i)*10 + col1+i);
-            }
-        }
-        else if(turn=="black")
-        {
-            for(int i=row1+1 ; i<8 ; i++)
-            {
-                if((btn[i][col1].id_piece <17) && (btn[i][col1].id_piece>0))
-                    break;
-
-                else if(btn[i][col1].id_piece >48)
-                {
-                    myset2.insert(i*10 + col1);
-                    break;
-                }
-
-                myset.insert(i*10 + col1);
-
-            }
-
-            for(int i=row1-1 ; i>=0 ; i--)
-            {
-                if(btn[i][col1].id_piece >48)
-                {
-                    myset2.insert(i*10 + col1);
-                    break;
-                }
-                else if( btn[i][col1].id_piece <17 && btn[i][col1].id_piece>0)
-                    break;
-
-                myset.insert(i*10 + col1);
-
-            }
-
-
-            for(int i=col1+1 ; i<8 ; i++)
-            {
-                if(btn[row1][i].id_piece >48)
-                {
-                    myset2.insert(row1*10 + i);
-                    break;
-                }
-                else if(btn[row1][i].id_piece <17 && btn[row1][i].id_piece>0)
-                    break;
-
-                myset.insert(row1*10 + i);
-
-            }
-
-
-            for(int i=col1-1 ; i>=0 ; i--)
-            {
-                if(btn[row1][i].id_piece >48)
-                {
-                    myset2.insert(row1*10 + i);
-                    break;
-                }
-                else if(btn[row1][i].id_piece <17 && btn[row1][i].id_piece>0)
-                    break;
-
-                myset.insert(row1*10 + i);
-
-            }
-
-            for(int i=1 ; i+row1<8 && i+col1<8 ; i++)
-            {
-                if(btn[row1+i][col1+i].id_piece >48)
-                {
-                    myset2.insert((row1+i)*10 + col1+i);
-                    break;
-                }
-                else if((btn[row1+i][col1+i].id_piece <17) && (btn[row1+i][col1+i].id_piece>0))
-                    break;
-
-                myset.insert((row1+i)*10 + col1+i);
-            }
-
-            for(int i=1 ; i+row1<8 && col1-i>=0 ; i++)
-            {
-                if(btn[row1+i][col1-i].id_piece >48)
-                {
-                    myset2.insert((row1+i)*10 + col1-i);
-                    break;
-                }
-                else if((btn[row1+i][col1-i].id_piece <17) && (btn[row1+i][col1-i].id_piece>0))
-                    break;
-
-                myset.insert((row1+i)*10 + col1-i);
-            }
-
-            for(int i=1 ; row1-i>=0 && col1-i>=0 ; i++)
-            {
-                if(btn[row1-i][col1-i].id_piece >48)
-                {
-                    myset2.insert((row1-i)*10 + col1-i);
-                    break;
-                }
-                else if((btn[row1-i][col1-i].id_piece <17) && (btn[row1-i][col1-i].id_piece>0))
-                    break;
-
-                myset.insert((row1-i)*10 + col1-i);
-            }
-
-            for(int i=1 ; row1-i>=0 && i+col1<8 ; i++)
-            {
-                if(btn[row1-i][col1+i].id_piece >48)
-                {
-                    myset2.insert((row1-i)*10 + col1+i);
-                    break;
-                }
-                else if((btn[row1-i][col1+i].id_piece <17) && (btn[row1-i][col1+i].id_piece>0))
-                    break;
-
-                myset.insert((row1-i)*10 + col1+i);
-            }
-
-        }
-    }
-    //knight
-    else if(btn[row1][col1].id_piece == 2 || btn[row1][col1].id_piece == 7 || btn[row1][col1].id_piece == 58 || btn[row1][col1].id_piece == 63)
-    {
-        if(turn=="white")
-        {
-            if( (row1+2)<8 )
-            {
-                if((col1+1)<8)
-                {
-                    if(btn[row1+2][col1+1].id_piece<17 && btn[row1+2][col1+1].id_piece>0)
-                        myset2.insert((row1+2)*10 + col1+1 );
-                    else if(btn[row1+2][col1+1].id_piece == 0)
-                        myset.insert((row1+2)*10 + col1+1);
-                }
-                if((col1-1)>=0)
-                {
-                    if(btn[row1+2][col1-1].id_piece<17 && btn[row1+2][col1-1].id_piece>0)
-                        myset2.insert((row1+2)*10 + col1-1 );
-                    else if(btn[row1+2][col1-1].id_piece == 0)
-                        myset.insert((row1+2)*10 + col1-1);
-                }
-            }
-
-            if( (row1-2)>=0 )
-            {
-                if((col1+1)<8)
-                {
-                    if(btn[row1-2][col1+1].id_piece<17 && btn[row1-2][col1+1].id_piece>0)
-                        myset2.insert((row1-2)*10 + col1+1 );
-                    else if(btn[row1-2][col1+1].id_piece == 0)
-                        myset.insert((row1-2)*10 + col1+1);
-                }
-                if((col1-1)>=0)
-                {
-                    if(btn[row1-2][col1-1].id_piece<17 && btn[row1-2][col1-1].id_piece>0)
-                        myset2.insert((row1-2)*10 + col1-1 );
-                    else if(btn[row1-2][col1-1].id_piece == 0)
-                        myset.insert((row1-2)*10 + col1-1);
-                }
-            }
-
-
-            if( (col1+2)<8 )
-            {
-                if((row1+1)<8)
-                {
-                    if(btn[row1+1][col1+2].id_piece<17 && btn[row1+1][col1+2].id_piece>0)
-                        myset2.insert((row1+1)*10 + col1+2 );
-                    else if(btn[row1+1][col1+2].id_piece == 0)
-                        myset.insert((row1+1)*10 + col1+2);
-                }
-                if((row1-1)>=0)
-                {
-                    if(btn[row1-1][col1+2].id_piece<17 && btn[row1-1][col1+2].id_piece>0)
-                        myset2.insert((row1-1)*10 + col1+2 );
-                    else if(btn[row1-1][col1+2].id_piece == 0)
-                        myset.insert((row1-1)*10 + col1+2);
-                }
-            }
-
-            if( (col1-2)>=0 )
-            {
-                if((row1+1)<8)
-                {
-                    if(btn[row1+1][col1-2].id_piece<17 && btn[row1+1][col1-2].id_piece>0)
-                        myset2.insert((row1+1)*10 + col1-2 );
-                    else if(btn[row1+1][col1-2].id_piece == 0)
-                        myset.insert((row1+1)*10 + col1-2);
-                }
-                if((row1-1)>=0)
-                {
-                    if(btn[row1-1][col1-2].id_piece<17 && btn[row1-1][col1-2].id_piece>0)
-                        myset2.insert((row1-1)*10 + col1-2 );
-                    else if(btn[row1-1][col1-2].id_piece == 0)
-                        myset.insert((row1-1)*10 + col1-2);
-                }
-            }
-
-
-        }
-
-        else if(turn=="black")
-        {
-            if( (row1+2)<8 )
-            {
-                if((col1+1)<8)
-                {
-                    if(btn[row1+2][col1+1].id_piece>48)
-                        myset2.insert((row1+2)*10 + col1+1 );
-                    else if(btn[row1+2][col1+1].id_piece == 0)
-                        myset.insert((row1+2)*10 + col1+1);
-                }
-                if((col1-1)>=0)
-                {
-                    if(btn[row1+2][col1-1].id_piece>48)
-                        myset2.insert((row1+2)*10 + col1-1 );
-                    else if(btn[row1+2][col1-1].id_piece == 0)
-                        myset.insert((row1+2)*10 + col1-1);
-                }
-            }
-
-            if( (row1-2)>=0 )
-            {
-                if((col1+1)<8)
-                {
-                    if(btn[row1-2][col1+1].id_piece>48)
-                        myset2.insert((row1-2)*10 + col1+1 );
-                    else if(btn[row1-2][col1+1].id_piece == 0)
-                        myset.insert((row1-2)*10 + col1+1);
-                }
-                if((col1-1)>=0)
-                {
-                    if(btn[row1-2][col1-1].id_piece>48)
-                        myset2.insert((row1-2)*10 + col1-1 );
-                    else if(btn[row1-2][col1-1].id_piece == 0)
-                        myset.insert((row1-2)*10 + col1-1);
-                }
-            }
-
-
-            if( (col1+2)<8 )
-            {
-                if((row1+1)<8)
-                {
-                    if(btn[row1+1][col1+2].id_piece>48)
-                        myset2.insert((row1+1)*10 + col1+2 );
-                    else if(btn[row1+1][col1+2].id_piece == 0)
-                        myset.insert((row1+1)*10 + col1+2);
-                }
-                if((row1-1)>=0)
-                {
-                    if(btn[row1-1][col1+2].id_piece>48)
-                        myset2.insert((row1-1)*10 + col1+2 );
-                    else if(btn[row1-1][col1+2].id_piece == 0)
-                        myset.insert((row1-1)*10 + col1+2);
-                }
-            }
-
-            if( (col1-2)>=0 )
-            {
-                if((row1+1)<8)
-                {
-                    if(btn[row1+1][col1-2].id_piece>48)
-                        myset2.insert((row1+1)*10 + col1-2 );
-                    else if(btn[row1+1][col1-2].id_piece == 0)
-                        myset.insert((row1+1)*10 + col1-2);
-                }
-                if((row1-1)>=0)
-                {
-                    if(btn[row1-1][col1-2].id_piece>48)
-                        myset2.insert((row1-1)*10 + col1-2 );
-                    else if(btn[row1-1][col1-2].id_piece == 0)
-                        myset.insert((row1-1)*10 + col1-2);
-                }
-            }
-
-        }
-    }
-    //pawn
-    else if(((btn[row1][col1].id_piece<17)&&(btn[row1][col1].id_piece>8)) || ((btn[row1][col1].id_piece<57)&&(btn[row1][col1].id_piece>48)) )
-    {
-        if(turn=="white")
-        {
-            if(row1-1 >=0)
-            {
-                if(col1-1>=0)
-                {
-                    if(btn[row1-1][col1-1].id_piece < 17 && btn[row1-1][col1-1].id_piece>0)
-                        myset2.insert((row1-1)*10 + col1-1);
-                }
-                if(col1+1 <8)
-                {
-                    if(btn[row1-1][col1+1].id_piece < 17 && btn[row1-1][col1+1].id_piece>0)
-                        myset2.insert((row1-1)*10 + col1+1);
-                }
-            }
-
-            if(row1 == 6)
-            {
-                for(int i=1;i<=2;i++)
-                {
-                    if(btn[row1-i][col1].id_piece == 0)
-                        myset.insert((row1-i)*10 + col1);
-                    else
-                        break;
-                }
-            }
-            else if(row1>1)
-            {
-                if(btn[row1-1][col1].id_piece == 0)
-                    myset.insert((row1-1)*10 + col1);
-            }
-            else if(row1 == 1)
-            {
-
-            }
-
-        }
-        else if(turn =="black")
-        {
-            if(row1+1 < 8)
-            {
-                if(col1-1 >=0)
-                {
-                    if(btn[row1+1][col1-1].id_piece >48)
-                        myset2.insert((row1+1)*10 + col1-1);
-                }
-                if(col1+1 < 8)
-                {
-                    if(btn[row1+1][col1+1].id_piece >48)
-                        myset2.insert((row1+1)*10 + col1+1);
-                }
-            }
-
-            if(row1 == 1)
-            {
-                for(int i=1;i<=2;i++)
-                {
-                    if(btn[row1+i][col1].id_piece == 0)
-                        myset.insert((row1+i)*10 + col1);
-                    else
-                        break;
-                }
-            }
-            else if(row1<6)
-            {
-                if(btn[row1+1][col1].id_piece == 0)
-                    myset.insert((row1+1)*10 + col1);
-            }
-            else if(row1 == 6)
-            {
-
-            }
-        }
-    }
-    //king
-    else if(btn[row1][col1].id_piece == 5 || btn[row1][col1].id_piece == 61 )
-    {
-        if(turn == "white")
-        {
-            if(row1+1<8)
-            {
-                if(btn[row1+1][col1].id_piece == 0)
-                    myset.insert((row1+1)*10 +col1);
-                else if(btn[row1+1][col1].id_piece < 17 && btn[row1+1][col1].id_piece >0)
-                    myset2.insert((row1+1)*10 +col1);
-
-                if((col1+1)<8)
-                {
-                    if(btn[row1+1][col1+1].id_piece < 17 && btn[row1+1][col1+1].id_piece >0 )
-                        myset2.insert(((row1+1)*10)+col1+1);
-                    else if(btn[row1+1][col1+1].id_piece ==0)
-                        myset.insert(((row1+1)*10)+col1+1);
-                }
-                if(col1-1 >=0)
-                {
-                    if(btn[row1+1][col1-1].id_piece < 17 && btn[row1+1][col1-1].id_piece >0 )
-                        myset2.insert(((row1+1)*10)+col1-1);
-                    else if(btn[row1+1][col1-1].id_piece  == 0)
-                        myset.insert(((row1+1)*10)+col1-1);
-
-                }
-            }
-            if(row1-1>=0)
-            {
-                if(btn[row1-1][col1].id_piece == 0)
-                    myset.insert((row1-1)*10 +col1);
-                else if(btn[row1-1][col1].id_piece<17 && btn[row1-1][col1].id_piece>0)
-                    myset2.insert((row1-1)*10 +col1);
-                if((col1+1)<8)
-                {
-                    if(btn[row1-1][col1+1].id_piece < 17 && btn[row1-1][col1+1].id_piece >0 )
-                        myset2.insert(((row1-1)*10)+col1+1);
-                    else if(btn[row1-1][col1+1].id_piece == 0)
-                        myset.insert(((row1-1)*10)+col1+1);
-                }
-                if(col1-1 >=0)
-                {
-                    if(btn[row1-1][col1-1].id_piece < 17 && btn[row1-1][col1-1].id_piece >0 )
-                        myset2.insert(((row1-1)*10)+col1-1);
-                    else if(btn[row1-1][col1-1].id_piece ==0)
-                        myset.insert(((row1-1)*10)+col1-1);
-                }
-            }
-            if(col1+1<8)
-            {
-                if(btn[row1][col1+1].id_piece <17 && btn[row1][col1+1].id_piece >0)
-                    myset2.insert(row1*10 + col1+1);
-                else if(btn[row1][col1+1].id_piece  ==0 )
-                    myset.insert(row1*10 + col1+1);
-            }
-            if(col1-1 >= 0)
-            {
-                if(btn[row1][col1-1].id_piece <17 && btn[row1][col1-1].id_piece >0)
-                    myset2.insert(row1*10 + col1-1);
-                else if(btn[row1][col1-1].id_piece  ==0 )
-                    myset.insert(row1*10 + col1-1);
-            }
-
-        }
-        else if(turn == "black")
-        {
-            if(row1+1<8)
-            {
-                if(btn[row1+1][col1].id_piece == 0)
-                    myset.insert((row1+1)*10 +col1);
-                else if(btn[row1+1][col1].id_piece >48)
-                    myset2.insert((row1+1)*10 +col1);
-
-                if((col1+1)<8)
-                {
-                    if(btn[row1+1][col1+1].id_piece >48)
-                        myset2.insert(((row1+1)*10)+col1+1);
-                    else if(btn[row1+1][col1+1].id_piece ==0)
-                        myset.insert(((row1+1)*10)+col1+1);
-                }
-                if(col1-1 >=0)
-                {
-                    if(btn[row1+1][col1-1].id_piece >48)
-                        myset2.insert(((row1+1)*10)+col1-1);
-                    else if(btn[row1+1][col1-1].id_piece  == 0)
-                        myset.insert(((row1+1)*10)+col1-1);
-
-                }
-            }
-            if(row1-1>=0)
-            {
-                if(btn[row1-1][col1].id_piece == 0)
-                    myset.insert((row1-1)*10 +col1);
-                else if(btn[row1-1][col1].id_piece>48)
-                    myset2.insert((row1-1)*10 +col1);
-                if((col1+1)<8)
-                {
-                    if(btn[row1-1][col1+1].id_piece >48)
-                        myset2.insert(((row1-1)*10)+col1+1);
-                    else if(btn[row1-1][col1+1].id_piece == 0)
-                        myset.insert(((row1-1)*10)+col1+1);
-                }
-                if(col1-1 >=0)
-                {
-                    if(btn[row1-1][col1-1].id_piece >48)
-                        myset2.insert(((row1-1)*10)+col1-1);
-                    else if(btn[row1-1][col1-1].id_piece ==0)
-                        myset.insert(((row1-1)*10)+col1-1);
-                }
-            }
-            if(col1+1<8)
-            {
-                if(btn[row1][col1+1].id_piece >48)
-                    myset2.insert(row1*10 + col1+1);
-                else if(btn[row1][col1+1].id_piece  ==0 )
-                    myset.insert(row1*10 + col1+1);
-            }
-            if(col1-1 >= 0)
-            {
-                if(btn[row1][col1-1].id_piece >48)
-                    myset2.insert(row1*10 + col1-1);
-                else if(btn[row1][col1-1].id_piece  ==0 )
-                    myset.insert(row1*10 + col1-1);
-            }
-
-        }
-
-    }
-}
-
-void MainWindow::colorize()
-{
-
-    for(QSet<int> ::iterator itr = myset.begin() ; itr != myset.end() ; itr++)
-    {
-        int row1 = (*itr) / 10;
-        int col1 = (*itr) % 10;
-        if((row1+col1)%2==0)
-        {
-            btn[row1][col1].pushbutton->setStyleSheet(" background-color: white;"
-                                                      "border-style: outset;"
-                                                      "border-width: 10px;"
-                                                      "border-color: green;");
-        }
-        else
-        {
-            btn[row1][col1].pushbutton->setStyleSheet(" background-color: gray;"
-                                                      "border-style: outset;"
-                                                      "border-width: 10px;"
-                                                      "border-color: green;");
-        }
-    }
-
-
-    for(QSet<int> ::iterator itr = myset2.begin() ; itr != myset2.end() ; itr++)
-    {
-        int row1 = (*itr) / 10;
-        int col1 = (*itr) % 10;
-        if((row1+col1)%2==0)
-        {
-            btn[row1][col1].pushbutton->setStyleSheet(" background-color: white;"
-                                                      "border-style: outset;"
-                                                      "border-width: 10px;"
-                                                      "border-color: red;");
-        }
-        else
-        {
-            btn[row1][col1].pushbutton->setStyleSheet(" background-color: gray;"
-                                                      "border-style: outset;"
-                                                      "border-width: 10px;"
-                                                      "border-color: red;");
-        }
-    }
-}
-
-void MainWindow::uncolorize()
-{
-    for(QSet<int> ::iterator itr = myset.begin() ; itr != myset.end() ; itr++)
-    {
-        int row1 = (*itr) / 10;
-        int col1 = (*itr) % 10;
-        if((row1+col1)%2==0)
-        {
-            btn[row1][col1].pushbutton->setStyleSheet(" background-color: white;");
-        }
-        else
-        {
-            btn[row1][col1].pushbutton->setStyleSheet(" background-color: gray;");
-
-        }
-    }
-
-
-    for(QSet<int> ::iterator itr = myset2.begin() ; itr != myset2.end() ; itr++)
-    {
-        int row1 = (*itr) / 10;
-        int col1 = (*itr) % 10;
-        if((row1+col1)%2==0)
-        {
-            btn[row1][col1].pushbutton->setStyleSheet(" background-color: white;");
-
-        }
-        else
-        {
-            btn[row1][col1].pushbutton->setStyleSheet(" background-color: gray;");
-
-        }
-    }
-}
-
-bool MainWindow::movement_is_aviable(int id)
-{
-    for(QSet<int> ::iterator itr = myset.begin() ; itr != myset.end() ; itr++)
-    {
-        if( (*itr)==id )
-            return true;
-    }
-
-
-    for(QSet<int> ::iterator itr = myset2.begin() ; itr != myset2.end() ; itr++)
-    {
-        if( (*itr)==id )
-            return true;
-    }
-    //    dd=0;
-    return false;
-}
-
-bool MainWindow::kingIsInDanger(QString s)
-{
-    int king1;
-    if(s=="white")
-    {
-        for(int i =0 ; i<8 ; i++)
-        {
-            for(int j=0 ; j<8 ; j++)
-            {
-                if(btn[i][j].id_piece < 17 && btn[i][j].id_piece >0)
-                {
-                    fillset(i*10 + j);
-                    for(QSet<int>::iterator itr = myset2.begin() ; itr!= myset2.end() ; itr++)
-                        mysetKing.insert((*itr));
-                }
-                if(btn[i][j].id_piece == 61 )
-                    king1 = i*10 + j;
-
-            }
-        }
-        if(mysetKing.find(king1) != mysetKing.end())
-            return true;
-
-        return false;
-    }
-}
-
-void MainWindow::filter_set(int id)
-{
-    for(QSet<int>::iterator itr = mysetCopy.begin() ; itr != mysetCopy.end() ; itr++)
-    {
-
-        int row1 = id/10;
-        int col1 = id%10;
-        int row2 = (*itr)/10;
-        int col2 = (*itr)%10;
-
-        int temp = btn[row2][col2].id_piece;
-        btn[row2][col2].id_piece = id;
-        btn[row1][col1].id_piece=0;
-
-        if(kingIsInDanger(turn))
-        {
-
-            mysetCopy.remove((*itr));
-        }
-
-        btn[row1][col1].id_piece = id;
-        btn[row2][col2].id_piece = temp;
-
-    }
-
-    for(QSet<int>::iterator itr = myset2Copy.begin() ; itr != myset2Copy.end() ; itr++)
-    {
-
-        int row1 = id/10;
-        int col1 = id%10;
-        int row2 = (*itr)/10;
-        int col2 = (*itr)%10;
-
-        int temp = btn[row2][col2].id_piece;
-        btn[row2][col2].id_piece = id;
-        btn[row1][col1].id_piece=0;
-
-        if(kingIsInDanger(turn))
-        {
-            myset2Copy.remove((*itr));
-        }
-
-        btn[row1][col1].id_piece = id;
-        btn[row2][col2].id_piece = temp;
-
-    }
-}
 
 
 MainWindow::~MainWindow()
